@@ -3,7 +3,35 @@
  * Handles all UI interactions and data fetching
  */
 
-const supabase = globalThis.supabaseClient;
+// Supabase client (popup-only)
+const SUPABASE_URL = 'https://cotfjapoyvacckyceeyy.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_fGrcY_g8h92azmgI__VbBg_U42Yw7bY';
+
+if (!globalThis.supabase || !globalThis.supabase.createClient) {
+  throw new Error('Supabase UMD not loaded. Ensure vendor/supabase.min.js loads first.');
+}
+
+const storageAdapter = {
+  async getItem(key) {
+    const result = await chrome.storage.local.get(key);
+    return result[key] ?? null;
+  },
+  async setItem(key, value) {
+    await chrome.storage.local.set({ [key]: value });
+  },
+  async removeItem(key) {
+    await chrome.storage.local.remove(key);
+  }
+};
+
+const supabase = globalThis.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    storage: storageAdapter,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: false
+  }
+});
 
 // DOM Elements
 const screens = {
