@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Accountability Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="screen">
+    <div class="loader"></div>
+    <p>Loading...</p>
+  </div>
+
+  <!-- Authentication Screen -->
+  <div id="authScreen" class="screen hidden">
+    <div class="auth-container">
+      <h1>🎯 Code Accountability</h1>
+      <p class="subtitle">Track your daily coding progress</p>
+
+      <!-- Login Form -->
+      <div id="loginForm" class="auth-form">
+        <h2>Sign In</h2>
+        <input type="email" id="loginEmail" placeholder="Email" autocomplete="email">
+        <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
+        <button id="loginBtn" class="primary-btn">Sign In</button>
+        <p class="switch-auth">Don't have an account? <a href="#" id="showSignup">Sign up</a></p>
+      </div>
+
+      <!-- Signup Form -->
+      <div id="signupForm" class="auth-form hidden">
+        <h2>Create Account</h2>
+        <input type="email" id="signupEmail" placeholder="Email" autocomplete="email">
+        <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" autocomplete="new-password">
+        <button id="signupBtn" class="primary-btn">Sign Up</button>
+        <p class="switch-auth">Already have an account? <a href="#" id="showLogin">Sign in</a></p>
+      </div>
+
+      <div id="authError" class="error-message hidden"></div>
+    </div>
+  </div>
+
+  <!-- Profile Setup Screen -->
+  <div id="profileSetupScreen" class="screen hidden">
+    <div class="container">
+      <h2>🔗 Link Your Profiles</h2>
+      <p class="subtitle">Connect your coding platforms to start tracking</p>
+
+      <form id="profileSetupForm" class="form">
+        <div class="form-group">
+          <label for="leetcodeUsername">LeetCode Username</label>
+          <input type="text" id="leetcodeUsername" placeholder="Enter username" required>
+        </div>
+
+        <div class="form-group">
+          <label for="gfgUsername">GeeksforGeeks Username</label>
+          <input type="text" id="gfgUsername" placeholder="Enter username" required>
+        </div>
+
+        <button type="submit" class="primary-btn">Save Profiles</button>
+      </form>
+
+      <div id="profileError" class="error-message hidden"></div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Screen -->
+  <div id="dashboardScreen" class="screen hidden">
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <div>
+          <h2>Dashboard</h2>
+          <p id="userEmail" class="user-email"></p>
+        </div>
+        <button id="logoutBtn" class="secondary-btn">Logout</button>
+      </div>
+
+      <!-- Individual Activity Section -->
+      <div class="section">
+        <h3>📊 Today's Activity</h3>
+        <div class="activity-grid">
+          <div class="activity-card">
+            <div class="platform">LeetCode</div>
+            <div id="leetcodeStatus" class="status">⏳</div>
+          </div>
+          <div class="activity-card">
+            <div class="platform">GeeksforGeeks</div>
+            <div id="gfgStatus" class="status">⏳</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Groups Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3>👥 Your Groups</h3>
+          <div class="action-buttons">
+            <button id="createGroupBtn" class="small-btn">+ Create</button>
+            <button id="joinGroupBtn" class="small-btn">Join</button>
+          </div>
+        </div>
+
+        <div id="groupsList" class="groups-list">
+          <!-- Groups will be loaded here -->
+        </div>
+
+        <div id="noGroups" class="empty-state hidden">
+          <p>You haven't joined any groups yet</p>
+          <p class="hint">Create or join a group to start tracking with others!</p>
+        </div>
+      </div>
+
+      <div id="dashboardError" class="error-message hidden"></div>
+    </div>
+  </div>
+
+  <!-- Create Group Modal -->
+  <div id="createGroupModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Create New Group</h3>
+        <button class="close-btn" id="closeCreateModal">&times;</button>
+      </div>
+
+      <form id="createGroupForm" class="form">
+        <div class="form-group">
+          <label for="groupName">Group Name</label>
+          <input type="text" id="groupName" placeholder="e.g., Daily DSA Warriors" required>
+        </div>
+
+        <div class="form-group">
+          <label for="groupType">Group Type</label>
+          <select id="groupType" required>
+            <option value="Pair">Pair (2 members)</option>
+            <option value="Squad">Squad (3+ members)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="platformRule">Platform Rule</label>
+          <select id="platformRule" required>
+            <option value="LeetCode">LeetCode Only</option>
+            <option value="GFG">GeeksforGeeks Only</option>
+            <option value="Both">Both Platforms</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="deadlineTime">Daily Deadline</label>
+          <input type="time" id="deadlineTime" value="23:59" required>
+        </div>
+
+        <button type="submit" class="primary-btn">Create Group</button>
+      </form>
+
+      <div id="createGroupError" class="error-message hidden"></div>
+    </div>
+  </div>
+
+  <!-- Join Group Modal -->
+  <div id="joinGroupModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Join Group</h3>
+        <button class="close-btn" id="closeJoinModal">&times;</button>
+      </div>
+
+      <form id="joinGroupForm" class="form">
+        <div class="form-group">
+          <label for="inviteCode">Invite Code</label>
+          <input type="text" id="inviteCode" placeholder="Enter group invite code" required>
+        </div>
+
+        <button type="submit" class="primary-btn">Join Group</button>
+      </form>
+
+      <div id="joinGroupError" class="error-message hidden"></div>
+    </div>
+  </div>
+
+  <script src="vendor/supabase.min.js"></script>
+  <script src="supabaseClient.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
